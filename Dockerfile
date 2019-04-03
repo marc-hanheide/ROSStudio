@@ -29,7 +29,7 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
 
 # GENERAL Packages
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt-get -y update && apt-get install -y apt-utils && \
+RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils lxde && \
     apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
     dh-autoreconf shellinabox tmux x11vnc xvfb zsh fonts-powerline nginx \
     default-jdk ghostscript postgresql gazebo9 rviz imagemagick mercurial  \
@@ -39,7 +39,7 @@ RUN apt-get -y update && apt-get install -y apt-utils && \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
     libavcodec-dev libavutil-dev libswscale-dev libwebp-dev 
-#RUN echo -e "no\nno\nno\n"| apt-get install  --force-yes -y guacamole-tomcat
+
 RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
@@ -114,14 +114,6 @@ RUN curl -SLO "http://apache.org/dyn/closer.cgi?action=download&filename=guacamo
 RUN set +x \
   && rm -rf ${CATALINA_HOME}/webapps/ROOT \
   && curl -SLo ${CATALINA_HOME}/webapps/ROOT.war "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUAC_VER}/binary/guacamole-${GUAC_VER}.war" 
-#  && curl -SLo ${GUACAMOLE_HOME}/lib/postgresql-42.1.4.jar "https://jdbc.postgresql.org/download/postgresql-42.1.4.jar" \
-#  && curl -SLO "http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUAC_VER}/binary/guacamole-auth-jdbc-${GUAC_VER}.tar.gz" \
-#  && tar -xzf guacamole-auth-jdbc-${GUAC_VER}.tar.gz \
-#  && cp -R guacamole-auth-jdbc-${GUAC_VER}/postgresql/guacamole-auth-jdbc-postgresql-${GUAC_VER}.jar ${GUACAMOLE_HOME}/extensions/ \
-#  && cp -R guacamole-auth-jdbc-${GUAC_VER}/postgresql/schema ${GUACAMOLE_HOME}/ \
-#  && rm -rf guacamole-auth-jdbc-${GUAC_VER} guacamole-auth-jdbc-${GUAC_VER}.tar.gz
-
-# Add optional extensions
 
 RUN set +x \
   && mkdir ${GUACAMOLE_HOME}/extensions-available \
