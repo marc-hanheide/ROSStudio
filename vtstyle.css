@@ -1,0 +1,6 @@
+#vt100 .bgAnsiDef {
+    background-color: #000000;
+}
+#vt100 .ansiDef {
+    color: #e0e0e0;
+}

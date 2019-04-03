@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>[:RI:] ROSStudio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="css/styles.css" rel="stylesheet">
+<!--    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet" type="text/css">-->
+
+<style type="text/css">
+body,html { height: 100%; padding:0; margin:0;}
+BODY { padding-top: 56px; background-color: #202020; }
+iframe { border:0; margin:0; padding:0; }
+#simulator { width: 50%; height: 50%; float: right; }
+#editor { width: 50%; height: 50%; }
+#terminals { width: 100%; height: 49%; position: relative; padding-top: 25px; }
+#terminal { height: 100%; width: 100%; background-color: black;}
+.cont { padding-top: 0px; height: 100%; width: 100%;}
+.bg-dark2 {
+    background-color: #2a2a2a!important;
+}
+#terminals .nav { background-color: #383838;}
+#terminals .nav a { color: #d0d0d0; text-decoration: none; padding:4px 8px;}
+#terminals .nav .active { background-color: #1976d2; color: white;}
+</style>
+
+</head>
+
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark2 fixed-top">
+  <a class="navbar-brand" href="#"><strong>[:RI:]</strong> ROSStudio</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Reset <span class="sr-only">(current)</span></a>
+      </li>
+<!--      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+ -->   </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav><iframe src="/ide/" id="editor"></iframe><iframe src="/simulator" id="simulator"></iframe><div id="terminals">
+<ul class="nav nav-tabs" style="position: absolute; top: 0; right: 0; left: 0; height: 25px;">
+  <li><a href="#" class="active">Console #1</a></li>
+  <li><a href="#">Console #2</a></li>
+  <li><a href="#">Console #3</a></li>
+  <li><a href="#">Console #4</a></li>
+  <li><a href="#">new Console</a></li>
+</ul>
+<iframe src="/shell/" id="terminal"></iframe>
+</div>
+</body>
+</html>
