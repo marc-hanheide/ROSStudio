@@ -1,17 +1,17 @@
 FROM ros:melodic-ros-base
 LABEL maintainer="Florian Wilk <florian.wilk@gmail.com>"
 
-EXPOSE 9000
-
 ENV ARCH=amd64 \
     GUAC_VER=1.0.0 \
+    NODEJS_VERSION=11 \
+    ROS_DIST=melodic \
+    GAZEBO_VERSION=8 \
     GUACAMOLE_HOME=/apps/guacamole \
-    PG_MAJOR=9.6 \
-    PGDATA=/config/postgres \
-    POSTGRES_USER=guacamole \
-    POSTGRES_DB=guacamole_db \
     SIAB_USERCSS="Normal:+/etc/shellinabox/options-enabled/00+Black-on-White.css,Reverse:-/etc/shellinabox/options-enabled/00_White-On-Black.css;Colors:+/etc/shellinabox/options-enabled/01+Color-Terminal.css,Monochrome:-/etc/shellinabox/options-enabled/01_Monochrome.css" \
     CATALINA_HOME=/opt/tomcat/latest
+
+EXPOSE 9000
+
 
 RUN rm -rf /opt/yarn && rm -f /usr/local/bin/yarn && rm -f /usr/local/bin/yarnpkg
 
@@ -27,20 +27,20 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
  mkdir -p /apps/web &&  chmod -R a+rw /apps/web && \
  mkdir -p /apps/roside && chmod -R a+rw /apps/roside 
 
-# GENERAL Packages
+# GENERAL Packages libgazebo9-dev 
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
     apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
     dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less\
     libncurses5-dev libncursesw5-dev locales gnupg ghostscript \
-    libgazebo9-dev libjansson-dev libboost-dev libtinyxml-dev \
+    libjansson-dev libboost-dev libtinyxml-dev \
     libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
     libavcodec-dev libavutil-dev libswscale-dev libwebp-dev \
     default-jdk ghostscript postgresql  imagemagick mercurial \
-    "ros-melodic-rviz*" "ros-melodic-gazebo*" "ros-melodic-urdf*" \
-    "ros-melodic-turtlebot3*" "ros-melodic-tf2*" "ros-melodic-smach*" "ros-melodic-rqt*"
+    "ros-${ROS_DIST}-rviz*" "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*" "ros-${ROS_DIST}-urdf*" \
+    "ros-${ROS_DIST}-turtlebot3*" "ros-${ROS_DIST}-tf2*" "ros-${ROS_DIST}-smach*" "ros-${ROS_DIST}-rqt*"
 
 RUN mkdir -p /usr/share/nginx/html
 
@@ -60,8 +60,9 @@ RUN apt-get clean && \
 
 # NODEJS + yarn
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x  | bash - 
-RUN apt-get -y install nodejs nodejs-legacy
+RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x  | bash - 
+RUN apt-get -y install nodejs 
+#nodejs-legacy
 RUN npm install -g yarn
 
 # Link FreeRDP to where guac expects it to be
@@ -80,7 +81,7 @@ RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb \
  && chmod -R a+rw /apps/gzweb \
  && cd gzweb \
  && hg up gzweb_1.4.0 \
- && /bin/bash -c "source /usr/share/gazebo/setup.sh &&  gzserver --verbose & npm run deploy --- -m  " # -m
+ && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m" 
 
 # Build ROSIde
 
@@ -131,7 +132,6 @@ RUN set +x \
     && cp guacamole-${i}-${GUAC_VER}/guacamole-${i}-${GUAC_VER}.jar ${GUACAMOLE_HOME}/extensions-available/ \
     && rm -rf guacamole-${i}-${GUAC_VER} guacamole-${i}-${GUAC_VER}.tar.gz \
   ;done
-ENV PATH=/usr/lib/postgresql/${PG_MAJOR}/bin:$PATH
 
 COPY ./web/. /apps/web/
 COPY ./bootscripts/. /

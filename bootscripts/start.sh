@@ -1,34 +1,41 @@
-#!/bin/sh
+#!/bin/bash
+
 
 echo "Starting NGINX"
-sudo nginx >> /dev/null
+sudo nginx > /home/ros/nginx.log
 
 echo "Starting Web"
 
 cd /apps/web
-node app.js &
+node app.js > /dev/null &
 
 echo "Starting ROS"
-roscore >> /dev/null &
+roscore &
 
-echo "Starting GZWEB"
-
-cd /apps/gzweb
-gzserver --verbose simple_arm.world &
-npm start -p 8090 &
-
-echo "Start Guacamole"
-
-sudo guacd start 
-/opt/tomcat/latest/bin/startup.sh
+sleep 5
 
 echo "Starting VNC"
-
 export DISPLAY=:0
 Xvfb $DISPLAY -screen 0 1024x768x16 &
 fluxbox &
 rosrun rviz rviz &
 x11vnc -forever -display $DISPLAY &
+
+echo "Starting GZWEB"
+
+source /usr/share/gazebo/setup.bash
+source /opt/ros/melodic/setup.bash
+cd /apps/gzweb
+#roslaunch gazebo_ros shapes_world.launch &
+sleep 10
+#/opt/ros/melodic/lib/gazebo_ros/gzserver -e ode /usr/share/gazebo-9/worlds/willowgarage.world > /home/ros/gzserver.log 2> /home/ros/gzserver_err.log &
+gzserver --verbose worlds/simple_arm.world &
+npm start -p 8090 > /home/ros/gzweb.log &
+
+echo "Start Guacamole"
+
+sudo guacd start 
+/opt/tomcat/latest/bin/startup.sh
 
 echo "Starting THEIA"
 
@@ -37,5 +44,5 @@ cd /apps/roside/
 
 echo "Starting SHELL"
 
-/usr/bin/shellinaboxd --debug --no-beep -u ros -g ros --disable-peer-check -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css 
+/usr/bin/shellinaboxd --debug --no-beep -u ros -g ros -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css 
 

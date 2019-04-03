@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker run -v "catkin_ws:/home/ros/catkin_ws" -p 9000:9000 -t rosstudio 
+docker run --cpus="3" -v "catkin_ws:/home/ros/catkin_ws" -p 9000:9000 -t rosstudio 
 
