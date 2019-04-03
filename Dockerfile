@@ -29,9 +29,9 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
 
 # GENERAL Packages
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils lxde && \
+RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
     apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
-    dh-autoreconf shellinabox tmux x11vnc xvfb zsh fonts-powerline nginx \
+    dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx \
     default-jdk ghostscript postgresql gazebo9 rviz imagemagick mercurial  \
     libncurses5-dev libncursesw5-dev locales gnupg ghostscript \
     libgazebo9-dev libjansson-dev libboost-dev libtinyxml-dev \

@@ -24,8 +24,10 @@ sudo guacd start
 
 echo "Starting VNC"
 
-x11vnc -forever -create &
-
+export DISPLAY=:0
+Xvfb $DISPLAY -screen 0 1024x768x16 &
+fluxbox &
+x11vnc -forever -display $DISPLAY &
 echo "Starting THEIA"
 
 cd /apps/roside/
