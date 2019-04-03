@@ -107,7 +107,7 @@ export GUACAMOLE_HOME="/apps/guacamole"
 echo ""
 echo "[:RI:] ROSStudio version 0.1"
 echo ""
-
+export DISPLAY=:0
 
 source /opt/ros/melodic/setup.zsh
 cd ~/catkin_ws

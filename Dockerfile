@@ -25,20 +25,23 @@ WORKDIR /home/ros
 RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+rw -R /apps && \
  mkdir -p /opt/tomcat/webapps/ROOT && chmod -R a+rw /opt/tomcat && \
  mkdir -p /apps/web &&  chmod -R a+rw /apps/web && \
- mkdir -p /apps/roside && chmod -R a+rw /apps/roside
+ mkdir -p /apps/roside && chmod -R a+rw /apps/roside 
 
 # GENERAL Packages
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
     apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
     dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx \
-    default-jdk ghostscript postgresql gazebo9 rviz imagemagick mercurial  \
+    default-jdk ghostscript postgresql gazebo9 imagemagick mercurial  \
+    "ros-melodic-rviz*" \
     libncurses5-dev libncursesw5-dev locales gnupg ghostscript \
     libgazebo9-dev libjansson-dev libboost-dev libtinyxml-dev \
     libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
     libavcodec-dev libavutil-dev libswscale-dev libwebp-dev 
+
+RUN mkdir -p /usr/share/nginx/html
 
 RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
@@ -126,13 +129,12 @@ RUN set +x \
   ;done
 ENV PATH=/usr/lib/postgresql/${PG_MAJOR}/bin:$PATH
 
-
 COPY ./web/. /apps/web/
 ADD start.sh /
 ADD vtstyle.css /apps/
-ADD .tmux.conf /home/ros/
-ADD .tmux-themepack /home/ros/.tmux-themepack
-ADD default /etc/nginx/sites-available
+COPY ./home/tmux/. /home/ros/
+copy ./nginx/. /usr/share/nginx/html/
+ADD nginx/default /etc/nginx/sites-available
 ADD guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws

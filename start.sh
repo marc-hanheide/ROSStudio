@@ -27,6 +27,7 @@ echo "Starting VNC"
 export DISPLAY=:0
 Xvfb $DISPLAY -screen 0 1024x768x16 &
 fluxbox &
+rosrun rviz rviz &
 x11vnc -forever -display $DISPLAY &
 echo "Starting THEIA"
 
