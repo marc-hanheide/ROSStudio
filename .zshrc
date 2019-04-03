@@ -99,13 +99,15 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias sros=". ~/catkin_ws/devel/setup.zsh"
+alias weblog="sudo tail -f -n 300 /opt/tomcat/latest/logs/catalina.out"
 #alias emx="emacs --no-window-system"
 #export PATH=$PATH:/usr/local/cuda-10.0/b
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.0/lib64
-
+export GUACAMOLE_HOME="/apps/guacamole"
 echo ""
 echo "[:RI:] ROSStudio version 0.1"
 echo ""
+
 
 source /opt/ros/melodic/setup.zsh
 cd ~/catkin_ws

@@ -1,0 +1,15 @@
+<user-mapping>
+
+    <!-- Pro Benutzer gibt es einen Abschnitt für Benutzername, Passwort -->
+    <!-- und den verfügbaren Verbindungen für diesen Benutzer -->
+
+    <!-- Benutzer Administrator-->
+    <authorize username="admin" password="admin">
+
+        <connection name="GUI">
+                <protocol>vnc</protocol>
+                <param name="hostname">localhost</param>      <!-- FQDN oder IP des Zielhost -->
+                <param name="port">5900</param>                   <!-- Port, Standard ist 3389 -->
+        </connection>
+    </authorize>
+</user-mapping>

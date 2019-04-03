@@ -15,7 +15,16 @@ echo "Starting GZWEB"
 
 cd /apps/gzweb
 gzserver --verbose &
-npm start &
+npm start -p 8090 &
+
+echo "Start Guacamole"
+
+sudo guacd start 
+/opt/tomcat/latest/bin/startup.sh
+
+echo "Starting VNC"
+
+x11vnc -forever -create &
 
 echo "Starting THEIA"
 
