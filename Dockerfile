@@ -197,8 +197,8 @@ RUN chmod -R a+rw /apps/roside
 WORKDIR /home/ros
 USER ros
 # Install Theia
-
-RUN cd /apps && git clone --depth 1 https://github.com/theia-ide/theia && cd theia && yarn && cd /apps/roside && yarn theia build
+RUN cd /apps/roside && yarn && yarn theia build
+#RUN cd /apps && git clone --depth 1 https://github.com/theia-ide/theia && cd theia && yarn && yarn theia build && cd /apps/roside && yarn theia build
 #ADD package.json /home/ros/theia
 #RUN cd /home/ros/theia && yarn
 #RUN cd /apps/roside && yarn theia build
