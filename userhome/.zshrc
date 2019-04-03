@@ -108,6 +108,6 @@ echo ""
 echo "[:RI:] ROSStudio version 0.1"
 echo ""
 export DISPLAY=:0
-
+export IGN_IP=127.0.0.1
 source /opt/ros/melodic/setup.zsh
 cd ~/catkin_ws

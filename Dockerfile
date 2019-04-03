@@ -31,15 +31,16 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
     apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
-    dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx \
-    default-jdk ghostscript postgresql gazebo9 imagemagick mercurial  \
-    "ros-melodic-rviz*" \
+    dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less\
     libncurses5-dev libncursesw5-dev locales gnupg ghostscript \
     libgazebo9-dev libjansson-dev libboost-dev libtinyxml-dev \
     libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
-    libavcodec-dev libavutil-dev libswscale-dev libwebp-dev 
+    libavcodec-dev libavutil-dev libswscale-dev libwebp-dev \
+    default-jdk ghostscript postgresql  imagemagick mercurial \
+    "ros-melodic-rviz*" "ros-melodic-gazebo*" "ros-melodic-urdf*" \
+    "ros-melodic-turtlebot3*" "ros-melodic-tf2*" "ros-melodic-smach*" "ros-melodic-rqt*"
 
 RUN mkdir -p /usr/share/nginx/html
 
@@ -68,15 +69,18 @@ RUN [ "$ARCH" = "armhf" ] && ln -s /usr/local/lib/freerdp /usr/lib/arm-linux-gnu
 RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-gnu/freerdp || exit 0
 
 # GZWEB
-
+ENV IGN_IP=127.0.0.1
 WORKDIR /apps
-RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb && cd gzweb \
- && hg up gzweb_1.4.0 && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m" 
 
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
 
 USER ros
 WORKDIR /home/ros
+RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb \
+ && chmod -R a+rw /apps/gzweb \
+ && cd gzweb \
+ && hg up gzweb_1.4.0 \
+ && /bin/bash -c "source /usr/share/gazebo/setup.sh &&  gzserver --verbose & npm run deploy --- -m  " # -m
 
 # Build ROSIde
 
@@ -86,7 +90,7 @@ RUN cd /apps/roside && yarn && yarn theia build
 # OhMyZsh
 
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-ADD .zshrc /home/ros/
+ADD ./userhome/. /home/ros/
 
 # COPY RESOURCES as root 
 
@@ -130,10 +134,10 @@ RUN set +x \
 ENV PATH=/usr/lib/postgresql/${PG_MAJOR}/bin:$PATH
 
 COPY ./web/. /apps/web/
-ADD start.sh /
+COPY ./bootscripts/. /
 ADD vtstyle.css /apps/
-COPY ./home/tmux/. /home/ros/
-copy ./nginx/. /usr/share/nginx/html/
+#RUN chown -R ros:ros /home/ros/
+COPY ./nginx/. /usr/share/nginx/html/
 ADD nginx/default /etc/nginx/sites-available
 ADD guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh

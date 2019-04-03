@@ -6,7 +6,6 @@ const path = __dirname + '/views/';
 const port = 5000;
 
 router.use(function (req,res,next) {
-  console.log('/' + req.method);
   next();
 });
 
@@ -17,7 +16,7 @@ router.get('/', function(req,res){
 router.get('/sharks', function(req,res){
   res.sendFile(path + 'sharks.html');
 });
-
+app.use('/assets', express.static('/apps/gzweb/http/client/assets'));
 app.use(express.static(path));
 app.use('/', router);
 
