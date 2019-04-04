@@ -80,6 +80,7 @@ WORKDIR /apps
 WORKDIR /apps/gzweb
 RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
 hg up gzweb_1.4.0 && \
+sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
 /bin/bash -c "source /usr/share/gazebo-9/setup.sh && npm run deploy --- -m" 
 
 USER ros
