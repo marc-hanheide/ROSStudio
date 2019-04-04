@@ -3,9 +3,9 @@ LABEL maintainer="Florian Wilk <florian.wilk@gmail.com>"
 
 ENV ARCH=amd64 \
     GUAC_VER=1.0.0 \
-    NODEJS_VERSION=11 \
+    NODEJS_VERSION=10 \
     ROS_DIST=melodic \
-    GAZEBO_VERSION=8 \
+    GAZEBO_VERSION=9 \
     GUACAMOLE_HOME=/apps/guacamole \
     SIAB_USERCSS="Normal:+/etc/shellinabox/options-enabled/00+Black-on-White.css,Reverse:-/etc/shellinabox/options-enabled/00_White-On-Black.css;Colors:+/etc/shellinabox/options-enabled/01+Color-Terminal.css,Monochrome:-/etc/shellinabox/options-enabled/01_Monochrome.css" \
     CATALINA_HOME=/opt/tomcat/latest
@@ -14,7 +14,6 @@ EXPOSE 9000
 
 
 RUN rm -rf /opt/yarn && rm -f /usr/local/bin/yarn && rm -f /usr/local/bin/yarnpkg
-
 # Add our User with Sudo and set default root password to "root"
 
 RUN useradd -m -G sudo -U ros && \
@@ -28,19 +27,23 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
  mkdir -p /apps/roside && chmod -R a+rw /apps/roside 
 
 # GENERAL Packages libgazebo9-dev 
+RUN apt-get update && apt-get install -y wget curl sudo
+RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
+RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
-    apt-get install -y g++ wget build-essential cmake make openssl curl openssh-client sudo git \
+    apt-get install -y g++ build-essential cmake make openssl curl openssh-client sudo git \
     dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less\
-    libncurses5-dev libncursesw5-dev locales gnupg ghostscript \
-    libjansson-dev libboost-dev libtinyxml-dev \
+    libncurses5-dev libncursesw5-dev libsdformat8-dev libignition-math4 libignition-transport4 locales gnupg ghostscript \
+    libjansson-dev libboost-dev libtinyxml-dev gazebo${GAZEBO_VERSION} libgazebo${GAZEBO_VERSION}-dev \
     libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
     libavcodec-dev libavutil-dev libswscale-dev libwebp-dev \
     default-jdk ghostscript postgresql  imagemagick mercurial \
-    "ros-${ROS_DIST}-rviz*" "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*" "ros-${ROS_DIST}-urdf*" \
+    "ros-${ROS_DIST}-rviz*" "ros-${ROS_DIST}-urdf*" \ 
     "ros-${ROS_DIST}-turtlebot3*" "ros-${ROS_DIST}-tf2*" "ros-${ROS_DIST}-smach*" "ros-${ROS_DIST}-rqt*"
+    # "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*"
 
 RUN mkdir -p /usr/share/nginx/html
 
@@ -74,14 +77,13 @@ ENV IGN_IP=127.0.0.1
 WORKDIR /apps
 
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
+WORKDIR /apps/gzweb
+RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
+hg up gzweb_1.4.0 && \
+/bin/bash -c "source /usr/share/gazebo-9/setup.sh && npm run deploy --- -m" 
 
 USER ros
 WORKDIR /home/ros
-RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb \
- && chmod -R a+rw /apps/gzweb \
- && cd gzweb \
- && hg up gzweb_1.4.0 \
- && /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m" 
 
 # Build ROSIde
 
@@ -144,3 +146,4 @@ ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
 CMD ["/start.sh"]
 
+EXPOSE 8090

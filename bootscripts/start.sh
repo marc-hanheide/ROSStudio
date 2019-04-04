@@ -24,13 +24,14 @@ x11vnc -forever -display $DISPLAY &
 echo "Starting GZWEB"
 
 source /usr/share/gazebo/setup.bash
-source /opt/ros/melodic/setup.bash
+
 cd /apps/gzweb
 #roslaunch gazebo_ros shapes_world.launch &
 sleep 10
-#/opt/ros/melodic/lib/gazebo_ros/gzserver -e ode /usr/share/gazebo-9/worlds/willowgarage.world > /home/ros/gzserver.log 2> /home/ros/gzserver_err.log &
-gzserver --verbose worlds/simple_arm.world &
-npm start -p 8090 > /home/ros/gzweb.log &
+#/opt/ros/melodic/lib/gazebo_ros/gzserver -e ode /usr/share/gazebo-9/worlds/simple_arm.world &
+gzserver --verbose /usr/share/gazebo-9/worlds/simple_arm.world &
+sleep 10
+npm start -p 8090 &
 
 echo "Start Guacamole"
 
