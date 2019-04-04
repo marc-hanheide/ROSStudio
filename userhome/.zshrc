@@ -1,7 +1,7 @@
 [[ $TERM != "screen" ]] && exec tmux
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/ros/.oh-my-zsh"
@@ -109,6 +109,6 @@ echo "[:RI:] ROSStudio version 0.1"
 echo ""
 export DISPLAY=:0
 export IGN_IP=127.0.0.1
-source /usr/share/gazebo/setup.sh
-source /opt/ros/melodic/setup.zsh
+export GAZEBO_IP=127.0.0.1
+
 cd ~/catkin_ws

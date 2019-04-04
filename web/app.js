@@ -13,10 +13,7 @@ router.get('/', function(req,res){
   res.sendFile(path + 'index.html');
 });
 
-router.get('/sharks', function(req,res){
-  res.sendFile(path + 'sharks.html');
-});
-app.use('/assets', express.static('/apps/gzweb/http/client/assets'));
+app.use('/assets/', express.static('/apps/gzweb/http/client/assets/'));
 app.use(express.static(path));
 app.use('/', router);
 

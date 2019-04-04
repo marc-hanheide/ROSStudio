@@ -36,6 +36,18 @@ server {
             proxy_set_header Connection "Upgrade";
         proxy_pass http://localhost:3000/;
     }
+     location /notebook/ {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_http_version 1.1;
+        proxy_redirect off;
+        proxy_buffering off;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 86400;
+        proxy_pass http://localhost:8888/notebook/;
+    }
     location /simulator/ {
         proxy_http_version 1.1; 
         proxy_set_header Upgrade $http_upgrade; 
@@ -43,17 +55,25 @@ server {
  #       proxy_set_header Host $host;
  #       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
  #       proxy_set_header X-Real-IP $remote_addr;   
- #           proxy_http_version 1.1;
- #           proxy_set_header Host $host;
- #           proxy_set_header Upgrade $http_upgrade;
  #           proxy_set_header Connection "Upgrade"; 
  #           proxy_set_header X-Forwarded-Host $server_name;
  #           proxy_set_header X-Real-IP $remote_addr;
 #            proxy_set_header X-Forwarded-Proto https;
- #           proxy_redirect http:// $scheme://;
- #           proxy_set_header Connection "";
+            proxy_redirect http:// $scheme://;
+            proxy_set_header Connection "";
  #           proxy_cache_bypass $cookie_session;
-        proxy_pass http://localhost:8090/;
+         proxy_cache_bypass $cookie_session;
+            proxy_buffers 32 4k;
+            send_timeout 5m;
+            proxy_read_timeout 240;
+            proxy_send_timeout 240;
+            proxy_connect_timeout 240;
+            client_max_body_size 10m;
+            client_body_buffer_size 128k;
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;     
+                  proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";       
+        proxy_pass http://localhost:9090/;
     }
 
     location /rdp/ {

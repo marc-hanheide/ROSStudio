@@ -1,9 +1,9 @@
-FROM ros:melodic-ros-base
+FROM ros:melodic-ros-core
 LABEL maintainer="Florian Wilk <florian.wilk@gmail.com>"
 
 ENV ARCH=amd64 \
     GUAC_VER=1.0.0 \
-    NODEJS_VERSION=10 \
+    NODEJS_VERSION=11 \
     ROS_DIST=melodic \
     GAZEBO_VERSION=9 \
     GUACAMOLE_HOME=/apps/guacamole \
@@ -28,22 +28,25 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
 
 # GENERAL Packages libgazebo9-dev 
 RUN apt-get update && apt-get install -y wget curl sudo
-RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
-RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+#RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
+#RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
-    apt-get install -y g++ build-essential cmake make openssl curl openssh-client sudo git \
-    dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less\
-    libncurses5-dev libncursesw5-dev libsdformat8-dev libignition-math4 libignition-transport4 locales gnupg ghostscript \
-    libjansson-dev libboost-dev libtinyxml-dev gazebo${GAZEBO_VERSION} libgazebo${GAZEBO_VERSION}-dev \
-    libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev \
+    apt-get install -y g++ build-essential cmake make openssl curl openssh-client sudo git python-pip \
+    dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less vim nano pkg-config\
+    libncurses5-dev libncursesw5-dev "libsdformat*-dev" "libignition-math*" "libignition-transport*" locales gnupg ghostscript \
+    libjansson-dev libboost-all-dev libboost-dev libtinyxml-dev \
+    #gazebo${GAZEBO_VERSION} libgazebo${GAZEBO_VERSION}-dev \
+    "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*" \
+    libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev libgts-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
     libavcodec-dev libavutil-dev libswscale-dev libwebp-dev \
     default-jdk ghostscript postgresql  imagemagick mercurial \
-    "ros-${ROS_DIST}-rviz*" "ros-${ROS_DIST}-urdf*" \ 
-    "ros-${ROS_DIST}-turtlebot3*" "ros-${ROS_DIST}-tf2*" "ros-${ROS_DIST}-smach*" "ros-${ROS_DIST}-rqt*"
-    # "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*"
+    "ros-${ROS_DIST}-rviz*" \
+    "ros-${ROS_DIST}-urdf*" \ 
+    "ros-${ROS_DIST}-turtlebot3*" \
+     "ros-${ROS_DIST}-tf2*" "ros-${ROS_DIST}-smach*" "ros-${ROS_DIST}-rqt*"
 
 RUN mkdir -p /usr/share/nginx/html
 
@@ -52,6 +55,12 @@ RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     locale-gen en_US.UTF-8 && \
     chsh -s $(which zsh) && echo "ros ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+# NODEJS + yarn
+
+RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x  | bash - 
+RUN apt-get -y install nodejs 
+
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     ln -sf '/etc/shellinabox/options-enabled/00+Black on White.css' \
@@ -61,11 +70,7 @@ RUN apt-get clean && \
     ln -sf '/etc/shellinabox/options-enabled/01+Color Terminal.css' \
       /etc/shellinabox/options-enabled/01+Color-Terminal.css
 
-# NODEJS + yarn
 
-RUN curl -sL https://deb.nodesource.com/setup_${NODEJS_VERSION}.x  | bash - 
-RUN apt-get -y install nodejs 
-#nodejs-legacy
 RUN npm install -g yarn
 
 # Link FreeRDP to where guac expects it to be
@@ -74,16 +79,21 @@ RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-
 
 # GZWEB
 ENV IGN_IP=127.0.0.1
-WORKDIR /apps
+ENV GZWEB_WS /apps/gzweb
+RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
+WORKDIR $GZWEB_WS
 
-# ROSIDE and OhMyZsh - installation needs to be done as "ros"
-WORKDIR /apps/gzweb
-RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
-hg up gzweb_1.4.0 && \
-sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
-/bin/bash -c "source /usr/share/gazebo-9/setup.sh && npm run deploy --- -m" 
+#RUN hg up default && xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t
+#WORKDIR /apps
+#WORKDIR /apps/gzweb
+#RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
+RUN hg up gzweb_1.4.0 && sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
+/bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m " 
+#RUN deploy.sh -c -m local
+RUN chown -R ros:ros /apps
 
 USER ros
+# ROSIDE and OhMyZsh - installation needs to be done as "ros"
 WORKDIR /home/ros
 
 # Build ROSIde
@@ -136,6 +146,15 @@ RUN set +x \
     && rm -rf guacamole-${i}-${GUAC_VER} guacamole-${i}-${GUAC_VER}.tar.gz \
   ;done
 
+# JUPYTER
+
+RUN python -m pip install jupyter
+RUN mkdir /apps/jupyter
+COPY ./jupyter/. /apps/jupyter
+RUN echo "export GAZEBO_VERSION=${GAZEBO_VERSION} && source /usr/share/gazebo/setup.sh" >> /home/ros/.zshrc && \
+    echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc 
+
+
 COPY ./web/. /apps/web/
 COPY ./bootscripts/. /
 ADD vtstyle.css /apps/
@@ -146,5 +165,5 @@ ADD guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
 CMD ["/start.sh"]
-
-EXPOSE 8090
+EXPOSE 9090
+EXPOSE 8888
