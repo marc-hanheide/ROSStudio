@@ -25,7 +25,7 @@
 #c.JupyterApp.answer_yes = False
 
 ## Full path of a config file.
-#c.JupyterApp.config_file = ''
+c.JupyterApp.config_file = '/home/ros/.jupyter'
 
 ## Specify a config file to load.
 #c.JupyterApp.config_file_name = ''

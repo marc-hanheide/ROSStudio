@@ -1,7 +1,6 @@
 
-# change these entries from "melodic" to "kinetic" if you like
-FROM ros:melodic-ros-core 
-ENV ROS_DIST=melodic \
+FROM ros:kinetic-ros-core 
+ENV ROS_DIST=kinetic \
     ARCH=amd64 \
     GUAC_VER=1.0.0 \
     NODEJS_VERSION=11 \
@@ -13,8 +12,8 @@ ENV ROS_DIST=melodic \
 EXPOSE 9000
 
 RUN rm -rf /opt/yarn && rm -f /usr/local/bin/yarn && rm -f /usr/local/bin/yarnpkg
-# Add our User with Sudo and set default root password to "root"
 
+# Add our User with Sudo and set default root password to "root"
 RUN useradd -m -G sudo -U ros && \
  echo "root:root" | chpasswd
 
@@ -26,17 +25,15 @@ RUN mkdir -p /apps/guacamole/lib && mkdir /apps/guacamole/extensions && chmod a+
  mkdir -p /apps/roside && chmod -R a+rw /apps/roside 
 
 # GENERAL Packages libgazebo9-dev 
-RUN apt-get update && apt-get install -y wget curl sudo
-#RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list'
-#RUN wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+RUN apt-get update && apt-get install -y wget curl sudo python-software-properties software-properties-common
+RUN add-apt-repository ppa:git-core/ppa -y
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-get -y update && DEBIAN_FRONTEND=noninteractive apt-get install -y apt-utils && \
-    apt-get install -y g++ build-essential cmake make openssl curl openssh-client sudo git python-pip \
+    apt-get install -y g++ build-essential cmake make openssl curl openssh-client sudo git python-pip python3 python3-pip psmisc \
     dh-autoreconf shellinabox tmux x11vnc xvfb fluxbox zsh fonts-powerline nginx less vim nano pkg-config\
     libncurses5-dev libncursesw5-dev "libsdformat*-dev" "libignition-math*" "libignition-transport*" locales gnupg ghostscript \
     libjansson-dev libboost-all-dev libboost-dev libtinyxml-dev \
-    #gazebo${GAZEBO_VERSION} libgazebo${GAZEBO_VERSION}-dev \
-    "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*" \
+    "ros-${ROS_DIST}-gazebo${GAZEBO_VERSION}*" "ros-${ROS_DIST}-industrial-core" "ros-${ROS_DIST}-universal-robot" \
     libcairo2-dev libpng-dev libssl-dev libpam0g-dev zlib1g-dev libgts-dev \
     libssh2-1-dev libtelnet-dev libpango1.0-dev libossp-uuid-dev libcairo2-dev libssh2-1 libvncserver-dev \
     libfreerdp-dev libvorbis-dev gcc libpulse-dev libguac-client-ssh0 libguac-client-rdp0 \
@@ -86,13 +83,16 @@ WORKDIR $GZWEB_WS
 #WORKDIR /apps
 #WORKDIR /apps/gzweb
 #RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
-RUN hg up gzweb_1.4.0 && sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
+RUN hg up gzweb_1.4.0 && \
+sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
 /bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m " 
 #RUN deploy.sh -c -m local
+
 RUN chown -R ros:ros /apps
 
 USER ros
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
+
 WORKDIR /home/ros
 
 # Build ROSIde
@@ -147,11 +147,12 @@ RUN set +x \
 
 # JUPYTER
 
-RUN python -m pip install jupyter
+RUN python3 -m pip install jupyter
 RUN mkdir /apps/jupyter
 COPY ./config/jupyter/. /apps/jupyter
 RUN echo "export GAZEBO_VERSION=${GAZEBO_VERSION} && source /usr/share/gazebo/setup.sh" >> /home/ros/.zshrc && \
-    echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc 
+    echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc \
+    echo "source /home/ros/catkin_ws/devel/setup.zsh" >> /home/ros/.zshrc 
 
 COPY ./config/web/. /apps/web/
 COPY ./config/bootscripts/. /
@@ -161,6 +162,8 @@ ADD config/nginx/default /etc/nginx/sites-available
 ADD config/guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
+
+RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !important; }" > /home/ros/.jupyter/custom/custom.css
+RUn chown -R ros:ros /home/ros/.jupyter /home/ros/.tmux*
+
 CMD ["/start.sh"]
-EXPOSE 9090
-EXPOSE 8888

@@ -1,4 +1,4 @@
-[[ $TERM != "screen" ]] && exec tmux
+[[ $TERM != "screen" ]] && exec tmux -f /home/ros/.tmux.conf
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH
@@ -100,6 +100,10 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias sros=". ~/catkin_ws/devel/setup.zsh"
 alias weblog="sudo tail -f -n 300 /opt/tomcat/latest/logs/catalina.out"
+
+alias sros="source /home/ros/catkin_ws/devel/setup.zsh"
+alias kgw="kill $(ps aux | grep 'server.js 9090' | awk '{print $2}')"
+alias sgw="/bin/bash -c 'cd /apps/gzweb && npm start -p 9090 &'"
 #alias emx="emacs --no-window-system"
 #export PATH=$PATH:/usr/local/cuda-10.0/b
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.0/lib64
@@ -112,3 +116,11 @@ export IGN_IP=127.0.0.1
 export GAZEBO_IP=127.0.0.1
 
 cd ~/catkin_ws
+
+loadworld() {
+  sudo killall gzserver
+  sudo killall node
+  gzserver -e ode $1 -s /opt/ros/melodic/lib/libgazebo_ros_paths_plugin.so -s /opt/ros/melodic/lib/libgazebo_ros_api_plugin.so & 
+  /bin/bash -c "cd /apps/gzweb && npm start -p 9090 &"
+}
+
