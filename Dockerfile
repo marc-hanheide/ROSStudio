@@ -98,13 +98,13 @@ WORKDIR /home/ros
 
 # Build ROSIde
 
-COPY package.json /apps/roside 
+COPY config/theia/package.json /apps/roside 
 RUN cd /apps/roside && yarn && yarn theia build 
 
 # OhMyZsh
 
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-ADD ./userhome/. /home/ros/
+ADD ./config/userhome/. /home/ros/
 
 # COPY RESOURCES as root 
 
@@ -150,16 +150,16 @@ RUN set +x \
 
 RUN python -m pip install jupyter
 RUN mkdir /apps/jupyter
-COPY ./jupyter/. /apps/jupyter
+COPY ./config/jupyter/. /apps/jupyter
 RUN echo "export GAZEBO_VERSION=${GAZEBO_VERSION} && source /usr/share/gazebo/setup.sh" >> /home/ros/.zshrc && \
     echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc 
 
-COPY ./web/. /apps/web/
-COPY ./bootscripts/. /
-ADD vtstyle.css /apps/
-COPY ./nginx/. /usr/share/nginx/html/
-ADD nginx/default /etc/nginx/sites-available
-ADD guacamole/ /apps/guacamole
+COPY ./config/web/. /apps/web/
+COPY ./config/bootscripts/. /
+ADD ./config/shell/vtstyle.css /apps/
+COPY ./config/nginx/. /usr/share/nginx/html/
+ADD config/nginx/default /etc/nginx/sites-available
+ADD config/guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
 CMD ["/start.sh"]
