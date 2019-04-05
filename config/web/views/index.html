@@ -9,6 +9,9 @@
     <link href="css/styles.css" rel="stylesheet">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.9/split.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>    
 <!--    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet" type="text/css">-->
 
 <style type="text/css">
@@ -40,6 +43,11 @@ iframe { border:0; margin:0; padding:0; }
     }
     .gutter {z-index: 90; background-color: #101010;}
     .gutter:HOVER {background-color:#1976d2;}
+
+.iframer { position: relative; z-index: 10;}
+.iframer iframe { width: 100%; height: 100%;}
+.minibutton { position: absolute; font-size: 22px; padding: 2px 4px; z-index: 900; right: 16px; bottom: 30px; background-color: #383838; color: #e0e0e0;  }
+.minibutton:hover {background-color:#1976d2; color: white;}
 </style>
 
 </head>
@@ -78,13 +86,13 @@ iframe { border:0; margin:0; padding:0; }
     </form>-->
   </div>
 </nav>
-<iframe src="/notebook/notebooks/notebooks/welcome.ipynb" id="jupyter"></iframe>
+<div id="jupyter" class="iframer"><iframe src="/notebook/notebooks/notebooks/welcome.ipynb"></iframe></div>
 <div class="tiles" id="rightarea">
   <div class="toptile" id="toparea">
-      <iframe src="/ide/" id="editor"></iframe>
-      <iframe src="/simulator" id="simulator"></iframe>
+      <div id="editor" class="iframer"><iframe src="/ide/"></iframe></div>
+      <div id="simulator" class="iframer"><iframe src="/simulator"></iframe></div>
   </div>
-  <div class="bottomtile" id="bottomarea">
+  <div class="bottomtile iframer" id="bottomarea">
           <!--<ul class="nav nav-tabs" style="position: absolute; top: 0; right: 0; left: 0; height: 25px;">
             <li><a href="#" class="active">Console #1</a></li>
             <li><a href="#">Console #2</a></li>
@@ -109,10 +117,51 @@ Split(['#jupyter', '#rightarea'], {
     gutterSize: 3
 })
 Split(['#toparea', '#bottomarea'], {
-    sizes: [50,50],
+    sizes: [60,40],
     gutterSize:3,
     direction: 'vertical'
 })
+$(function() {
+
+ var a_window,a_width,a_height,a_style;
+
+ $.fn.showButtons = function() {
+
+     this.each(function() {
+         var link = $( this );
+         button=$("<a class='minibutton fullscreen' href='#'><i class='fas fa-expand'></i></a>");
+         button.click(function() {
+            if(a_window) {
+              a_window.css({"z-index":"10"});
+              a_window.css({"position":"relative","top":"0px"});
+              a_window.attr("style",a_style);
+              a_window=null;
+              $(".iframer").show();
+            }
+            else {
+              a_window=link;
+              a_window.css({"z-index":"100"});
+              a_style=link.attr("style")
+              a_window.height($(document).height()-37);
+              $(".iframer").hide();
+              link.show();
+              link.css({"position":"absolute","top":"37px","right":"0px","left":"0px","bottom":"0px","width":"100%"});
+
+            }
+
+          });
+         link.append( button );
+     });
+
+     return this;
+
+ };
+
+  $( "#editor" ).showButtons();
+  $( "#simulator" ).showButtons();
+  $( "#bottomarea" ).showButtons();
+  $( "#jupyter" ).showButtons();
+});
 
 
 </script>
