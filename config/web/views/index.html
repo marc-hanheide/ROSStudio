@@ -33,6 +33,7 @@ iframe { border:0; margin:0; padding:0; }
 .bottomtile { width: 100%; height: 50%; overflow: hidden;}
 .navbar-brand { font-size: 1rem; line-height: 1.0; }
 .navbar-brand span { color: #1976d2; font-weight: bold}
+.bluebg { background-color: #1976d2; color: white; font-weight: bold;} 
 .gutter-horizontal {    float: left;
     width: 10px;
     height: 100%;
@@ -53,8 +54,8 @@ iframe { border:0; margin:0; padding:0; }
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#" onclick='window.open("/rdp/?username=admin&password=admin","rdp", "width=1024, height=768, scrollbars=no");'>RDP<span class="sr-only">(current)</span></a>
+      <li class="nav-item active bluebg">
+        <a class="nav-link" href="#" onclick='window.open("/rdp/?username=admin&password=admin","rdp", "width=1024, height=768, scrollbars=no");'>VIEW DESKTOP<span class="sr-only">(current)</span></a>
       </li>
 <!--      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -100,16 +101,16 @@ iframe { border:0; margin:0; padding:0; }
 
 <script>
 Split(['#editor', '#simulator'], {
-    sizes: [25, 75],
-    gutterSize: 5
+    sizes: [50, 50],
+    gutterSize: 3
 })
 Split(['#jupyter', '#rightarea'], {
     sizes: [25, 75],
-    gutterSize: 5
+    gutterSize: 3
 })
 Split(['#toparea', '#bottomarea'], {
     sizes: [50,50],
-    gutterSize:5,
+    gutterSize:3,
     direction: 'vertical'
 })
 

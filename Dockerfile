@@ -1,17 +1,16 @@
-FROM ros:melodic-ros-core
-LABEL maintainer="Florian Wilk <florian.wilk@gmail.com>"
 
-ENV ARCH=amd64 \
+# change these entries from "melodic" to "kinetic" if you like
+FROM ros:melodic-ros-core 
+ENV ROS_DIST=melodic \
+    ARCH=amd64 \
     GUAC_VER=1.0.0 \
     NODEJS_VERSION=11 \
-    ROS_DIST=melodic \
     GAZEBO_VERSION=9 \
     GUACAMOLE_HOME=/apps/guacamole \
     SIAB_USERCSS="Normal:+/etc/shellinabox/options-enabled/00+Black-on-White.css,Reverse:-/etc/shellinabox/options-enabled/00_White-On-Black.css;Colors:+/etc/shellinabox/options-enabled/01+Color-Terminal.css,Monochrome:-/etc/shellinabox/options-enabled/01_Monochrome.css" \
     CATALINA_HOME=/opt/tomcat/latest
 
 EXPOSE 9000
-
 
 RUN rm -rf /opt/yarn && rm -f /usr/local/bin/yarn && rm -f /usr/local/bin/yarnpkg
 # Add our User with Sudo and set default root password to "root"

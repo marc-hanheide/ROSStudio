@@ -47,5 +47,11 @@ You can create Thumbnails for GZWeb but it takes Hours or Days.
 ./create_thumbs.sh
 ```
 
+## switching the ROS-Distribution
+
+This all is still under construction, so you currently have to modify the Dockerfile
+and change 2 occurances of "melodic" to "kinetic". 
+
+
 
 
