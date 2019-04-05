@@ -154,11 +154,9 @@ COPY ./jupyter/. /apps/jupyter
 RUN echo "export GAZEBO_VERSION=${GAZEBO_VERSION} && source /usr/share/gazebo/setup.sh" >> /home/ros/.zshrc && \
     echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc 
 
-
 COPY ./web/. /apps/web/
 COPY ./bootscripts/. /
 ADD vtstyle.css /apps/
-#RUN chown -R ros:ros /home/ros/
 COPY ./nginx/. /usr/share/nginx/html/
 ADD nginx/default /etc/nginx/sites-available
 ADD guacamole/ /apps/guacamole
