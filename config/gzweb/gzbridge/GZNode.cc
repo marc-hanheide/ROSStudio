@@ -16,6 +16,7 @@
 */
 
 #include <node.h>
+#include <exception>
 #include "GZNode.hh"
 
 #include "GazeboInterface.hh"
@@ -135,15 +136,18 @@ void GZNode::SetConnected(const FunctionCallbackInfo<Value>& args)
 /////////////////////////////////////////////////
 void GZNode::GetIsGzServerConnected(const FunctionCallbackInfo<Value>& args)
 {
+  std::cout << "*** Start GetIsGZServerConnnected";
   GZNode *obj = ObjectWrap::Unwrap<GZNode>(args.This());
   bool value = obj->isGzServerConnected;
 
   args.GetReturnValue().Set(value);
+  std::cout << "*** Finish GetIsGZServerConnnected";
 }
 
 /////////////////////////////////////////////////
 void GZNode::GetMaterialScriptsMessage(const FunctionCallbackInfo<Value>& args)
 {
+  std::cout << "*** Start GetMaterialScriptsMessage";
   Isolate* isolate = args.GetIsolate();
 
   if (args.Length() < 1)
@@ -158,11 +162,13 @@ void GZNode::GetMaterialScriptsMessage(const FunctionCallbackInfo<Value>& args)
     isolate->ThrowException(Exception::TypeError(
         String::NewFromUtf8(isolate, "Wrong argument type. String expected.")));
     return;
+
   }
 
   String::Utf8Value path(args[0]->ToString());
 
   OgreMaterialParser materialParser;
+  try{
   materialParser.Load(std::string(*path));
   std::string topic = "~/material";
   std::string materialJson = materialParser.GetMaterialAsJson();
@@ -170,8 +176,10 @@ void GZNode::GetMaterialScriptsMessage(const FunctionCallbackInfo<Value>& args)
   msg += "{\"op\":\"publish\",\"topic\":\"" + topic + "\", \"msg\":";
   msg += materialJson;
   msg += "}";
-
+  std::cerr << "YES";
   args.GetReturnValue().Set(String::NewFromUtf8(isolate ,msg.c_str()));
+  std::cerr << "NO";
+  } catch(std::exception &ex) { std::cerr << ex.what() << std::endl;}
 }
 
 /////////////////////////////////////////////////
@@ -257,10 +265,11 @@ void GZNode::Request(const FunctionCallbackInfo<Value>& args)
   }
 
   GZNode* obj = ObjectWrap::Unwrap<GZNode>(args.This());
-
+  std::cout << "processing request";
   String::Utf8Value request(args[0]->ToString());
   obj->gzIface->PushRequest(std::string(*request));
-
+  std::cout << "Processed request";
+  
   return;
 }
 

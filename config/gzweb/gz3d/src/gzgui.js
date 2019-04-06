@@ -2051,8 +2051,8 @@ GZ3D.Gui.prototype.findModelThumbnail = function(instanceName)
  */
 GZ3D.Gui.prototype.updateStats = function()
 {
-  var tree = angular.element($('#treeMenu')).scope();
-  tree.updateStats();
+//  var tree = angular.element($('#treeMenu')).scope();
+//  tree.updateStats();
 };
 
 GZ3D.Gui.prototype.updateModelStatsAsync = function()

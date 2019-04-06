@@ -52,5 +52,5 @@ echo "Starting GZWEB"
 su -l -s /bin/zsh -c 'cd /apps/gzweb/ && while true; do npm start -p 9090; sleep 5; done' ros &
 
 echo "Starting SHELL"
-/usr/bin/shellinaboxd --debug --no-beep -u ros -g ros -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css > /dev/null
+/usr/bin/shellinaboxd --no-beep -u ros -g ros -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css > /dev/null
 

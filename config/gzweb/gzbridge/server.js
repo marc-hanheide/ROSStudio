@@ -97,9 +97,11 @@ if (gzNode.getIsGzServerConnected())
 }
 else
 {
+  console.log('Get Material Scripts begin');
   materialScriptsMessage =
       gzNode.getMaterialScriptsMessage(staticBasePath + '/assets');
-}
+ console.log('Get Material Scripts ennd');
+    }
 
 // Start websocket server
 let wsServer = new WebSocketServer({
@@ -113,7 +115,7 @@ let wsServer = new WebSocketServer({
 });
 
 wsServer.on('request', function(request) {
-
+  try{
   // Accept request
   let connection = request.accept(null, request.origin);
 
@@ -142,17 +144,23 @@ wsServer.on('request', function(request) {
 
   // Handle messages received from client
   connection.on('message', function(message) {
+    try {
     if (message.type === 'utf8') {
+      try{
       console.log(new Date() + ' Received Message: ' + message.utf8Data +
           ' from ' + request.origin + ' ' + connection.remoteAddress);
       gzNode.request(message.utf8Data);
+    }catch(e){console.error(e);}
     }
     else if (message.type === 'binary') {
+      try{
       console.log(new Date() + ' Received Binary Message of ' +
           message.binaryData.length + ' bytes from ' + request.origin + ' ' +
           connection.remoteAddress);
       connection.sendBytes(message.binaryData);
+    } catch(e) { console.error("**** ERROR IN REQUEST 2 ****" +e);}
     }
+  } catch(e) { console.error("**** ERROR IN REQUEST 1 ****" +e);}
   });
 
   // Handle client disconnection
@@ -170,8 +178,10 @@ wsServer.on('request', function(request) {
       gzNode.setConnected(isConnected);
     }
   });
+}catch(e){console.err("*********** Error while Request " +e);}
 });
 
+console.log("*** Check if GZServer is connected begin");
 // If not connected, periodically send messages
 if (gzNode.getIsGzServerConnected())
 {
@@ -179,6 +189,7 @@ if (gzNode.getIsGzServerConnected())
 
   function update()
   {
+    try{
     if (connections.length > 0)
     {
       let msgs = gzNode.getMessages();
@@ -189,6 +200,9 @@ if (gzNode.getIsGzServerConnected())
           connections[i].sendUTF(msgs[j]);
         }
       }
-    }
+    }}catch(e) { console.error("*************** Error while update" + e);}
   }
 }
+
+console.log("*** Check if GZServer is connected");
+

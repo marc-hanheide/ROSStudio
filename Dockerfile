@@ -73,20 +73,7 @@ RUN npm install -g yarn
 RUN [ "$ARCH" = "armhf" ] && ln -s /usr/local/lib/freerdp /usr/lib/arm-linux-gnueabihf/freerdp || exit 0
 RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-gnu/freerdp || exit 0
 
-# GZWEB
-ENV IGN_IP=127.0.0.1
-ENV GZWEB_WS /apps/gzweb
-#RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
-COPY ./config/gzweb/. /apps/gzweb
-WORKDIR $GZWEB_WS
 
-RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t'
-
-#RUN hg up gzweb_1.4.0 && \
-#sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
-#/bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m " 
-
-RUN chown -R ros:ros /apps
 
 USER ros
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
@@ -152,6 +139,15 @@ RUN echo "export GAZEBO_VERSION=${GAZEBO_VERSION} && source /usr/share/gazebo/se
     echo "export ROS_DIST=${ROS_DIST} && source /opt/ros/${ROS_DIST}/setup.zsh" >> /home/ros/.zshrc \
     echo "source /home/ros/catkin_ws/devel/setup.zsh" >> /home/ros/.zshrc 
 
+# GZWEB
+ENV IGN_IP=127.0.0.1
+ENV GZWEB_WS /apps/gzweb
+#RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
+COPY ./config/gzweb/. /apps/gzweb
+WORKDIR $GZWEB_WS
+RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t'
+
+
 COPY ./config/web/. /apps/web/
 COPY ./config/bootscripts/. /
 ADD ./config/shell/vtstyle.css /apps/
@@ -161,7 +157,9 @@ ADD config/guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
 
-RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !important; }" > /home/ros/.jupyter/custom/custom.css
+RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !important; } \
+div.prompt { min-width: 0px;} \
+.prompt { min-width: 0px;}" > /home/ros/.jupyter/custom/custom.css
 RUn chown -R ros:ros /home/ros/.jupyter /home/ros/.tmux*
 
 CMD ["/start.sh"]

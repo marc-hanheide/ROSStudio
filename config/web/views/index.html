@@ -6,17 +6,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap-theme.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="css/styles.css" rel="stylesheet">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.9/split.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>    
 <!--    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet" type="text/css">-->
 
 <style type="text/css">
-body,html { height: 100%; padding:0; margin:0; line-height: 1.0; font-size: 0.9rem;}
-BODY { padding-top: 37px; background-color: #202020; }
+body,html { height: 100%; padding:0; margin:0; line-height: 1.0; font-size: 1.0rem;}
+BODY { padding-top: 49px; background-color: #202020; overflow:hidden; }
 iframe { border:0; margin:0; padding:0; }
 #simulator { width: 50%; height: 100%; float: right; }
 #editor { width: 50%; height: 100%; float:left; }
@@ -46,7 +43,7 @@ iframe { border:0; margin:0; padding:0; }
 
 .iframer { position: relative; z-index: 10;}
 .iframer iframe { width: 100%; height: 100%;}
-.minibutton { position: absolute; font-size: 22px; padding: 2px 4px; z-index: 900; right: 16px; bottom: 30px; background-color: #383838; color: #e0e0e0;  }
+.minibutton { position: absolute;  padding: 2px 4px; z-index: 900; right: 16px; top: 16px; background-color: #1976d2; color: #e0e0e0;  }
 .minibutton:hover {background-color:#1976d2; color: white;}
 </style>
 
@@ -65,28 +62,42 @@ iframe { border:0; margin:0; padding:0; }
       <li class="nav-item active bluebg">
         <a class="nav-link" href="#" onclick='window.open("/rdp/?username=admin&password=admin","rdp", "width=1024, height=768, scrollbars=no");'><i class="fas fa-desktop"></i></a>
       </li>
-<!--      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
- -->   </ul>
+    </ul>
 <!--    <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>-->
   </div>
 </nav>
-<div id="jupyter" class="iframer"><iframe src="/notebook/notebooks/welcome.ipynb"></iframe></div>
+<div id="jupyter" class="iframer">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark2">
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+              <li class="nav-item bluebg disabled">
+                  <a class="nav-link" href="#"><i class="fas fa-angle-left"></i></a>
+                </li>
+                <li class="nav-item bluebg">
+                    <a class="nav-link" href="#"><i class="fas fa-angle-right"></i></a>
+                  </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Tutorial: Welcome
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                <a class="dropdown-item" href="#">Welcome</a>
+                <a class="dropdown-item" href="#">Simulate a Robot-Arm</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">close Tutorials</a>
+              </div>
+            </li>
+         </ul>
+         <ul class="navbar-nav ml-auto">
+
+           </ul>
+        </div>
+      </nav>
+  <iframe src="/notebook/notebooks/welcome.ipynb"></iframe></div>
 <div class="tiles" id="rightarea">
   <div class="toptile" id="toparea">
       <div id="editor" class="iframer"><iframe src="/ide/"></iframe></div>
@@ -105,7 +116,10 @@ iframe { border:0; margin:0; padding:0; }
   </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.5.9/split.min.js"></script>
 
 <script>
 Split(['#editor', '#simulator'], {
@@ -136,16 +150,18 @@ $(function() {
               a_window.css({"position":"relative","top":"0px"});
               a_window.attr("style",a_style);
               a_window=null;
-              $(".iframer").show();
+              $(".iframer").css({"visibility":"visible"});
+//              $(".iframer").show();
             }
             else {
               a_window=link;
               a_window.css({"z-index":"100"});
               a_style=link.attr("style")
-              a_window.height($(document).height()-37);
-              $(".iframer").hide();
-              link.show();
-              link.css({"position":"absolute","top":"37px","right":"0px","left":"0px","bottom":"0px","width":"100%"});
+              a_window.height($(document).height()-49);
+              $(".iframer").css({"visibility":"hidden"});
+              link.css({"visibility":"visible"});
+//              link.show();
+              link.css({"position":"absolute","top":"49px","right":"0px","left":"0px","bottom":"0px","width":"100%"});
 
             }
 

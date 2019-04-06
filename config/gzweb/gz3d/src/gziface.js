@@ -43,7 +43,11 @@ GZ3D.GZIface.prototype.connect = function()
   this.webSocket.on('error', function() {
     that.onError();
   });
-
+  this.webSocket.on('close', function() {
+    setTimeout(function() {
+      that.connect();
+    }, 10000);
+   });
   this.numConnectionTrials++;
 };
 
