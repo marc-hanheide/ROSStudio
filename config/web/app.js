@@ -13,7 +13,7 @@ router.get('/', function(req,res){
   res.sendFile(path + 'index.html');
 });
 
-app.use('/assets/', express.static('/apps/gzweb/http/client/assets/'));
+app.use('/q-assets/', express.static('/apps/gzweb/http/client/assets/'));
 app.use(express.static(path));
 app.use('/', router);
 

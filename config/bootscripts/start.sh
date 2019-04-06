@@ -8,10 +8,11 @@ cd /apps/web
 node app.js > /dev/null &
 
 echo "Starting NGINX"
-sudo nginx > /home/ros/nginx.log
+#sudo nginx > /home/ros/nginx.log
+service nginx start
 
 echo "Starting Jupyter"
-su -l -c 'jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' --config=/apps/jupyter/jupyter_notebook_config.py /home/ros/notebooks/welcome.ipynb &' ros
+su -l -c 'jupyter notebook --ip 0.0.0.0 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' --config=/apps/jupyter/jupyter_notebook_config.py /home/ros/notebooks/welcome.ipynb > /dev/null &' ros
 
 echo "Starting VNC"
 export DISPLAY=:0
@@ -23,7 +24,7 @@ echo "Starting ROS"
 sleep 5
 echo "Starting GZServer"
 #su -l -c 'zsh -c "roscore & source /home/ros/catkin_ws/devel/setup.zsh && roslaunch rrbot_gazebo rrbot_world.launch &"' ros
-su -l -c 'zsh -c "roscore & source /home/ros/catkin_ws/devel/setup.zsh && gzserver -e ode worlds/simple_arm.world &"' ros
+su -l -s /bin/zsh -c  'roscore & source /home/ros/catkin_ws/devel/setup.zsh && gzserver -e ode worlds/simple_arm.world &' ros
 #rosrun rviz rviz &
 
 
@@ -45,7 +46,7 @@ sudo guacd start > /dev/null
 
 echo "Starting THEIA"
 cd /apps/roside/
-(yarn theia start /home/ros/catkin_ws --hostname 0.0.0.0) &
+(yarn theia start /home/ros/catkin_ws --hostname 0.0.0.0) > /dev/null &
 
 echo "Starting GZWEB"
 su -l -s /bin/zsh -c 'cd /apps/gzweb/ && while true; do npm start -p 9090; sleep 5; done' ros &

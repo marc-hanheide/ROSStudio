@@ -76,17 +76,15 @@ RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-
 # GZWEB
 ENV IGN_IP=127.0.0.1
 ENV GZWEB_WS /apps/gzweb
-RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
+#RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
+COPY ./config/gzweb/. /apps/gzweb
 WORKDIR $GZWEB_WS
 
-#RUN hg up default && xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t
-#WORKDIR /apps
-#WORKDIR /apps/gzweb
-#RUN cd /apps && hg clone https://bitbucket.org/osrf/gzweb  &&  cd gzweb && \
-RUN hg up gzweb_1.4.0 && \
-sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
-/bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m " 
-#RUN deploy.sh -c -m local
+RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t'
+
+#RUN hg up gzweb_1.4.0 && \
+#sed -i.bak "s/url : 'ws:\/\/' + this.url/url : 'ws:\/\/' + this.url + '\/simulator\/'/g" /apps/gzweb/gz3d/src/gziface.js && \
+#/bin/bash -c "source /usr/share/gazebo/setup.sh && npm run deploy --- -m " 
 
 RUN chown -R ros:ros /apps
 
@@ -167,3 +165,4 @@ RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !import
 RUn chown -R ros:ros /home/ros/.jupyter /home/ros/.tmux*
 
 CMD ["/start.sh"]
+EXPOSE 11311
