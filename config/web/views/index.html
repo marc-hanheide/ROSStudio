@@ -5,6 +5,8 @@
     <title>ROSStudio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap-theme.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="css/styles.css" rel="stylesheet">
@@ -23,6 +25,14 @@ iframe { border:0; margin:0; padding:0; }
 .bg-dark2 {
     background-color: #2a2a2a!important;
 }
+.bg-dark3 {
+    background-color: #383838!important; color: #d4d4d4 !important;
+    font-size: 13px;
+    padding: 3px 4px;
+}
+.bg-dark3 .navbar-nav .nav-link {
+    color: #d4d4d4;
+}
 #terminals .nav { background-color: #383838;}
 #terminals .nav a { color: #d0d0d0; text-decoration: none; padding:4px 8px;}
 #terminals .nav .active { background-color: #1976d2; color: white;}
@@ -34,17 +44,21 @@ iframe { border:0; margin:0; padding:0; }
 .navbar-brand { font-size: 1rem; line-height: 1.0; }
 .navbar-brand span { color: #1976d2; font-weight: bold}
 .bluebg { background-color: #1976d2; color: white; font-weight: bold;} 
+.bluebg .disabled { background-color: #404040; color: #909090;}
 .gutter-horizontal {    float: left;
     width: 10px;
     height: 100%;
     }
-    .gutter {z-index: 90; background-color: #101010;}
+    .gutter {z-index: 90; background-color: #404040;}
     .gutter:HOVER {background-color:#1976d2;}
 
 .iframer { position: relative; z-index: 10;}
 .iframer iframe { width: 100%; height: 100%;}
-.minibutton { position: absolute;  padding: 2px 4px; z-index: 900; right: 16px; top: 16px; background-color: #1976d2; color: #e0e0e0;  }
+.minibutton { position: absolute;  padding: 4px 4px; width:25px; text-align:center;z-index: 900; background-color: #1976d2; color: #e0e0e0;  }
 .minibutton:hover {background-color:#1976d2; color: white;}
+.fullscreen {  right: 16px; top: 4px; }
+.refresh {  right: 16px; top: 36px; }
+
 </style>
 
 </head>
@@ -70,38 +84,44 @@ iframe { border:0; margin:0; padding:0; }
   </div>
 </nav>
 <div id="jupyter" class="iframer">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark2">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark3">
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav">
-              <li class="nav-item bluebg disabled">
-                  <a class="nav-link" href="#"><i class="fas fa-angle-left"></i></a>
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tutorial: Welcome
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                    <a class="dropdown-item" href="#">Welcome</a>
+                    <a class="dropdown-item" href="#">Simulate a Robot-Arm</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">close Tutorials</a>
+                  </div>
+                </li>            
+              <li class="nav-item bluebg ">
+                  <a class="nav-link disabled" id="prevpage" href="#"><i class="fas fa-angle-left"></i></a>
                 </li>
                 <li class="nav-item bluebg">
-                    <a class="nav-link" href="#"><i class="fas fa-angle-right"></i></a>
+                    <a class="nav-link" href="#" id="nextpage"><i class="fas fa-angle-right"></i></a>
                   </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Tutorial: Welcome
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                <a class="dropdown-item" href="#">Welcome</a>
-                <a class="dropdown-item" href="#">Simulate a Robot-Arm</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">close Tutorials</a>
-              </div>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="navbarDropdown3" role="button">
+                      0 of 12
+                    </a>
+                  </li>                  
+          
          </ul>
          <ul class="navbar-nav ml-auto">
 
            </ul>
         </div>
       </nav>
-  <iframe src="/notebook/notebooks/welcome.ipynb"></iframe></div>
+  <iframe src="/notebook/notebooks/welcome.ipynb" id="notebookIframe"></iframe></div>
 <div class="tiles" id="rightarea">
   <div class="toptile" id="toparea">
-      <div id="editor" class="iframer"><iframe src="/ide/"></iframe></div>
-      <div id="simulator" class="iframer"><iframe src="/simulator"></iframe></div>
+      <div id="editor" class="iframer"><iframe src="/ide/" ></iframe></div>
+      <div id="simulator" class="iframer"><iframe src="/simulator" id="simulatoriframe"></iframe></div>
   </div>
   <div class="bottomtile iframer" id="bottomarea">
           <!--<ul class="nav nav-tabs" style="position: absolute; top: 0; right: 0; left: 0; height: 25px;">
@@ -124,20 +144,70 @@ iframe { border:0; margin:0; padding:0; }
 <script>
 Split(['#editor', '#simulator'], {
     sizes: [50, 50],
-    gutterSize: 3
+    gutterSize: 4
 })
 Split(['#jupyter', '#rightarea'], {
     sizes: [25, 75],
-    gutterSize: 3
+    gutterSize: 4
 })
 Split(['#toparea', '#bottomarea'], {
     sizes: [60,40],
-    gutterSize:3,
+    gutterSize:4,
     direction: 'vertical'
 })
+
+var tutorials= [
+  {"name":"Welcome to ROSStudio","pages":[
+{"name":"Welcome","url":"/notebook/notebooks/welcome.ipynb"},
+{"name":"Welcome 2","url":"/notebook/notebooks/welcome_2.ipynb"},
+]},
+{"name":"How to Simulate a Robot-Arm","pages":[
+{"name":"Welcome","url":"/notebook/notebooks/welcome.ipynb"},
+{"name":"Welcome 2","url":"/notebook/notebooks/welcome_2.ipynb"},
+]},
+]
+
+var currentTutorial=0;
+var currentPage=0;
+
+var updatePager=function(){
+  if(currentPage>0) {
+    $("#prevpage").removeClass("disabled");
+  } else {
+    $("#prevpage").addClass("disabled");
+  }
+  if(currentPage<tutorials[currentTutorial].pages.length-1)
+  {
+    $("#nextpage").removeClass("disabled");
+  } else {
+    $("#nextpage").addClass("disabled");
+  }
+}
+
+var updateNotebook=function() {
+$("#navbarDropdown2").html(tutorials[currentTutorial].name);
+$("#navbarDropdown3").html("page " +(currentPage+1) + " of " + tutorials[currentTutorial].pages.length); //[currentTutorial].pages[currentPage].name);
+$("#notebookIframe").attr("src",tutorials[currentTutorial].pages[currentPage].url);
+updatePager();
+}
+
 $(function() {
 
  var a_window,a_width,a_height,a_style;
+
+updateNotebook();
+$("#prevpage").click(function(){ 
+  if(currentPage>0) {
+    currentPage--;
+  updateNotebook();
+  }
+});
+$("#nextpage").click(function(){
+  if(currentPage<tutorials[currentTutorial].pages.length-1) {
+    currentPage++;
+  updateNotebook();
+  }
+});
 
  $.fn.showButtons = function() {
 
@@ -173,10 +243,16 @@ $(function() {
 
  };
 
-  $( "#editor" ).showButtons();
-  $( "#simulator" ).showButtons();
-  $( "#bottomarea" ).showButtons();
-  $( "#jupyter" ).showButtons();
+  $( "#editor" ).showButtons(false);
+  $( "#simulator" ).showButtons(true);
+  $( "#bottomarea" ).showButtons(false);
+  $( "#jupyter" ).showButtons(false);
+
+  rbutton=$("<a class='minibutton refresh' href='#'><i class='fas fa-redo-alt'></i></a>");
+  rbutton.click(function() {
+    $('#simulatoriframe').attr('src', $('#simulatoriframe').attr('src'));
+  });
+  $( "#simulator" ).append(rbutton);
 });
 
 

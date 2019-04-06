@@ -149,6 +149,8 @@ RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1
 
 
 COPY ./config/web/. /apps/web/
+WORKDIR /apps/web
+RUN npm install
 COPY ./config/bootscripts/. /
 ADD ./config/shell/vtstyle.css /apps/
 COPY ./config/nginx/. /usr/share/nginx/html/
@@ -156,6 +158,10 @@ ADD config/nginx/default /etc/nginx/sites-available
 ADD config/guacamole/ /apps/guacamole
 ENV SHELL /bin/zsh
 WORKDIR /home/ros/catkin_ws
+
+# Load and register python2 for Jupyter Notebooks
+
+#RUN python2 -m pip install --upgrade ipykernel && python2 -m ipykernel install 
 
 RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !important; } \
 div.prompt { min-width: 0px;} \

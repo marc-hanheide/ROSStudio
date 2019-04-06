@@ -108,8 +108,9 @@ alias sgw="/bin/bash -c 'cd /apps/gzweb && npm start -p 9090 &'"
 #export PATH=$PATH:/usr/local/cuda-10.0/b
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-10.0/lib64
 export GUACAMOLE_HOME="/apps/guacamole"
+alias bas='zsh -c "cd ~/catkin_ws & catkin_make "' && sros
 echo ""
-echo "[:RI:] ROSStudio version 0.1"
+echo "use 'bas' to build and source your catkin_ws"
 echo ""
 export DISPLAY=:0
 export IGN_IP=127.0.0.1
