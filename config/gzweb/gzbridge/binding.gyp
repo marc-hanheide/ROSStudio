@@ -8,7 +8,7 @@
         "ConfigLoader.cc", "ConfigLoader.hh",
         "OgreMaterialParser.cc", "OgreMaterialParser.hh"],
       'cflags_cc!': [ '-fno-rtti', '-fno-exceptions' ],
-      'cflags!': [ '-fno-exceptions' ],
+      'cflags!': ['-fno-exceptions' ],
       "conditions": [
         ['OS=="linux"', {
           'cflags': [

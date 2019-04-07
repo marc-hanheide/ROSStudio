@@ -74,6 +74,7 @@ RUN [ "$ARCH" = "armhf" ] && ln -s /usr/local/lib/freerdp /usr/lib/arm-linux-gnu
 RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-gnu/freerdp || exit 0
 
 
+RUN chown -R ros:ros /apps/roside
 
 USER ros
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
