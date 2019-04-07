@@ -75,12 +75,11 @@ RUN [ "$ARCH" = "amd64" ] && ln -s /usr/local/lib/freerdp /usr/lib/x86_64-linux-
 
 
 RUN chown -R ros:ros /apps/roside
-
 USER ros
 # ROSIDE and OhMyZsh - installation needs to be done as "ros"
 
 WORKDIR /home/ros
-
+RUN rosdep update
 # Build ROSIde
 
 COPY config/theia/package.json /apps/roside 
@@ -146,7 +145,7 @@ ENV GZWEB_WS /apps/gzweb
 #RUN hg clone https://bitbucket.org/osrf/gzweb $GZWEB_WS
 COPY ./config/gzweb/. /apps/gzweb
 WORKDIR $GZWEB_WS
-RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m #-t'
+RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m'
 
 
 COPY ./config/web/. /apps/web/
@@ -164,7 +163,7 @@ WORKDIR /home/ros/catkin_ws
 
 #RUN python2 -m pip install --upgrade ipykernel && python2 -m ipykernel install 
 
-RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header { display: none !important; } \
+RUN mkdir -p /home/ros/.jupyter/custom/ && echo "#header-container,#menubar { display: none !important; } \
 div.prompt { min-width: 0px;} \
 .prompt { min-width: 0px;}" > /home/ros/.jupyter/custom/custom.css
 RUn chown -R ros:ros /home/ros/.jupyter /home/ros/.tmux*

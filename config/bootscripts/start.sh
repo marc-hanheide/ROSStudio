@@ -20,7 +20,10 @@ su -l -c 'Xvfb $DISPLAY -screen 0 1024x768x16  > /dev/null & fluxbox & x11vnc -f
 echo "Starting ROS and GZServer"
 #su -l -c 'zsh -c "roscore & source /home/ros/catkin_ws/devel/setup.zsh && roslaunch rrbot_gazebo rrbot_world.launch &"' ros
 #su -l -s /bin/zsh -c  'roscore & source /home/ros/catkin_ws/devel/setup.zsh && gzserver -e ode worlds/empty.world &' ros
-su -l -s /bin/zsh -c  ' source /opt/ros/kinetic/setup.zsh && roscore & gzserver -e ode worlds/simple_arm.world &' ros
+#su -l -s /bin/zsh -c  ' source /opt/ros/kinetic/setup.zsh && roscore & gzserver -e ode worlds/simple_arm.world &' ros
+su -l -s /bin/zsh -c  ' source /opt/ros/kinetic/setup.zsh && roslaunch gazebo_ros mud_world.launch &' ros
+
+
 #rosrun rviz rviz &
 
 #roslaunch gazebo_ros elevator_world.launch &
@@ -45,5 +48,5 @@ echo "Starting GZWEB"
 su -l -s /bin/zsh -c 'source /opt/ros/kinetic/setup.zsh && cd /apps/gzweb/ && while true; do npm start -p 9090; sleep 15; done' ros &
 
 echo "Starting SHELL"
-/usr/bin/shellinaboxd --no-beep -u ros -g ros -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css > /dev/null
+/usr/bin/shellinaboxd --no-beep -q -u ros -g ros -t -p 4200 -s /:ros:ros:HOME:/bin/zsh --css /apps/vtstyle.css > /dev/null
 
