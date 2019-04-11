@@ -147,6 +147,8 @@ COPY ./config/gzweb/. /apps/gzweb
 WORKDIR $GZWEB_WS
 RUN /bin/bash -c 'source /usr/share/gazebo/setup.sh &&  xvfb-run -s "-screen 0 1280x1024x24" ./deploy.sh -m'
 
+ADD ./config/assets/gzweb.tgz /apps/gzweb/http/client
+ADD ./config/assets/gazebo.tgz /home/ros
 
 COPY ./config/web/. /apps/web/
 WORKDIR /apps/web

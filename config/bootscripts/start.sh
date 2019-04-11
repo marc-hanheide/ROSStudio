@@ -21,7 +21,7 @@ echo "Starting ROS and GZServer"
 #su -l -c 'zsh -c "roscore & source /home/ros/catkin_ws/devel/setup.zsh && roslaunch rrbot_gazebo rrbot_world.launch &"' ros
 #su -l -s /bin/zsh -c  'roscore & source /home/ros/catkin_ws/devel/setup.zsh && gzserver -e ode worlds/empty.world &' ros
 #su -l -s /bin/zsh -c  ' source /opt/ros/kinetic/setup.zsh && roscore & gzserver -e ode worlds/simple_arm.world &' ros
-su -l -s /bin/zsh -c  ' source /opt/ros/kinetic/setup.zsh && roslaunch gazebo_ros mud_world.launch &' ros
+su -l -s /bin/zsh -c  ' source /home/ros/catkin_ws/devel/setup.zsh && roslaunch ur_gazebo ur5.launch & ' ros
 
 
 #rosrun rviz rviz &

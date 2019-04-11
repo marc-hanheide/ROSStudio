@@ -227,7 +227,7 @@ $("#nextpage").click(function(){
               a_window=link;
               a_window.css({"z-index":"100"});
               a_style=link.attr("style")
-              a_window.height($(document).height()-49);
+              a_window.height($(window).height()-49);
               $(".iframer").css({"visibility":"hidden"});
               link.css({"visibility":"visible"});
 //              link.show();

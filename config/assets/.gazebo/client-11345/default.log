@@ -1,0 +1,15 @@
+Gazebo multi-robot simulator, version 7.0.0
+Copyright (C) 2012-2016 Open Source Robotics Foundation.
+Released under the Apache 2 License.
+http://gazebosim.org
+
+
+(1554845446 529089391) [Msg] Waiting for master.
+(1554845446 533485639) [Msg] Connected to gazebo master @ http://127.0.0.1:11345
+(1554845446 533633221) [Msg] Publicized address: 127.0.0.1
+(1554845446 543902928) Loaded .ini file from: "/home/ros/.gazebo/gui.ini"
+(1554845447 638775751) [Err] [InsertModelWidget.cc:298] Missing model.config for model "/opt/ros/kinetic/share/turtlebot3_gazebo/models/turtlebot3_autorace"
+(1554845447 639289291) model.config file is missing in directory["/opt/ros/kinetic/share/turtlebot3_gazebo/models/turtlebot3_autorace"]
+(1554845449 657457297) No spacenav daemon found. Spacenav functionality is disabled
+(1554845449 672321998) [Err] [Scene.cc:2927] Light [sun] not found. Use topic ~/factory/light to spawn a new light.
+(1554845449 953887899) [Err] [Scene.cc:2927] Light [sun] not found. Use topic ~/factory/light to spawn a new light.
