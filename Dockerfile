@@ -1,6 +1,6 @@
 
-FROM ros:kinetic-ros-core 
-ENV ROS_DIST=kinetic \
+FROM ros:melodic-ros-core 
+ENV ROS_DIST=melodic \
     ARCH=amd64 \
     GUAC_VER=1.0.0 \
     NODEJS_VERSION=11 \

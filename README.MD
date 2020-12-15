@@ -1,9 +1,9 @@
-# ROSStudio:kinetic
+# ROSStudio:melodic
 
 ROSStudio is a Dockerimage designed to have a "All-In-One"-DevEnv2Go.
 
 It allows you to run all this in your favorite Browser.
-ROS kinetic is used in this Image because there are more prebuilt packages available than for melodic (Universal Robot for example).
+ROS melodic is used in this Image because there are more prebuilt packages available than for melodic (Universal Robot for example).
 
 ## What do you need?
 
@@ -28,7 +28,7 @@ http://localhost:9000/
 
 This Dockerimage contains the following cool software:
 
-- ROS (melodic and kinetic tested)
+- ROS (melodic and melodic tested)
 - GZWEB - The Browser-Client for gzserver, the ROS-Simulator
 - THEIA - The CodeEditor. If you love VisualStudioCode, you will love THEIA
 - OhMyZSH - Because we love good Shells
